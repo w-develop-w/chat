@@ -34,6 +34,22 @@ io.on("connection", (socket) => {
     // When a client connects, the socket.io server generates a unique ID for each socket (connected client). Using socket.id, we print the identifier of the connected client to the console.
     console.log(`User Connected: ${socket.id}`)
 
+
+    // When the client sends a request to join a room (the "join_room" event), the server calls the function to handle this event. This function joins the client to the specified room using 
+    // socket.join(data), where data is the name of the room that the client passes in the request.
+    socket.on("join_room", (data) => {
+        socket.join(data)
+        console.log(`User with ID: ${socket.id} joined room: ${data}`)
+    })
+
+
+    // The "send_message" event is handled on the server with socket.on("send_message", (data) => { ... }). When the client sends a message with the "send_message" event, the server calls this
+    // handler and outputs a data object to the console, which is data about the message sent by the client.
+
+    socket.on("send_message", (data) => {
+        console.log(data)
+    })
+
     // This piece of code handles the "disconnect" event, which happens when the client disconnects from the server. When the client disconnects, the callback function () => { ... } is executed, 
     // and we print the message "User Disconnect" and the id of the disconnected client (socket.id) to the console.
     socket.on('disconnect', () => {
