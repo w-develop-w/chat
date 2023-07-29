@@ -1,6 +1,6 @@
 // Connect fraimwork Express. It used for create web-applications and handle HTTP-requires
 const express = require("express");
-// Create instance of application Express
+// Create exemplar of application Express
 const app = express();
 // Connecting build-in module "http" which allow ctreate HTTP-server 
 const http = require("http");
@@ -16,18 +16,26 @@ app.use(cors());
 // Creating of HTTP-server thanks to owr Express-application 'app' 
 const server = http.createServer(app)
 
-// Creating of instance of socket.io server  and passed to the http server we created with http.createServer(app). Now socket.io will work with this server
+// Creating of exemplar of socket.io server  and passed to the http server we created with http.createServer(app). Now socket.io will work with this server
 // and handle WebSocket connections and other transports.
 const io = new Server(server, {
+    // This sets the CORS setting for the socket.io server. This means that the server only allows connections from the "http://localhost:3000" domain. Other 
+    // domains cannot establish a WebSocket connection with this server due to the Same-Origin Policy. The 'methods' array defines the allowed HTTP methods for CORS requests.
     cors: {
         origin: "http://localhost:3000", 
         methods: ["GET", "POST"]  
     }
 })
 
-io.on("connection", (socket) => {
-    console.log(socket.id)
 
+// This block of code is responsible for handling the "connection" event, which occurs when a new client establishes a WebSocket connection to the socket.io server. When 
+// the client connects, the callback function (socket) => { ... } is executed.
+io.on("connection", (socket) => {
+    // When a client connects, the socket.io server generates a unique ID for each socket (connected client). Using socket.id, we print the identifier of the connected client to the console.
+    console.log(`User Connected: ${socket.id}`)
+
+    // This piece of code handles the "disconnect" event, which happens when the client disconnects from the server. When the client disconnects, the callback function () => { ... } is executed, 
+    // and we print the message "User Disconnect" and the id of the disconnected client (socket.id) to the console.
     socket.on('disconnect', () => {
         console.log("User Disconnect", socket.id)
     })
