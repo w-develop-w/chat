@@ -45,9 +45,9 @@ io.on("connection", (socket) => {
 
     // The "send_message" event is handled on the server with socket.on("send_message", (data) => { ... }). When the client sends a message with the "send_message" event, the server calls this
     // handler and outputs a data object to the console, which is data about the message sent by the client.
-
     socket.on("send_message", (data) => {
-        console.log(data)
+        // console.log(data)
+        socket.to(data.room).emit("receive_message",data)
     })
 
     // This piece of code handles the "disconnect" event, which happens when the client disconnects from the server. When the client disconnects, the callback function () => { ... } is executed, 
