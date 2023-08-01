@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom'
+import { setCurrentMessage, setMessageList } from './store/dataSlice'
+import { useAppDispatch, useAppSelector } from './hooks'
+
 
 function Chat({ socket, userName, room }) {
-    const [currentMessage, setCurrentMessage] = useState("");
-    const [messageList, setMessageList] = useState([]);
+    // const [currentMessage, setCurrentMessage] = useState("");
+    // const [messageList, setMessageList] = useState([]);
+
+    const currentMessage = useAppSelector(state => state.currentMessage)
+    const messageList = useAppSelector(state => state.messageList)
+    const dispatch = useAppDispatch()
 
     const sendMessage = async () => {
-        if (currentMessage !== "") {
+        if ( currentMessage !== "") {
             const messageData = {
                 room: room,
                 userName: userName,
@@ -15,13 +22,13 @@ function Chat({ socket, userName, room }) {
             };
 
             await socket.emit("send_message", messageData);
-            setMessageList((list) => [...list, messageData]);
+            dispatch(setMessageList((list) => [...list, messageData]));
         }
     };
 
     useEffect(() => {
         socket.on("receive_message", (data) => {
-            setMessageList((list) => [...list, data]);
+            dispatch(setMessageList((list) => [...list, data]));
         });
     }, [socket]);
 
@@ -60,7 +67,7 @@ function Chat({ socket, userName, room }) {
                     type="text"
                     value={currentMessage}
                     placeholder="Input your message"
-                    onChange={(event) => setCurrentMessage(event.target.value)}
+                    onChange={(event) => dispatch(setCurrentMessage(event.target.value))}
                     onKeyDown={handleKeyPress}
                 />
                 <button onClick={sendMessage}>&#9658;</button>
