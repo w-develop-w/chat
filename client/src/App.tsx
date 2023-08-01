@@ -1,93 +1,51 @@
-// import React, { useState } from "react"
-// import "./App.css"
-// import { io } from "socket.io-client"
-// import Chat from "./Chat.js"
+import React, { useState } from "react"
+import "./App.css"
+import { io } from "socket.io-client"
+import Chat from "./Chat"
+import { setUserName, setRoom, setShowChat } from "./store/dataSlice"
+import { useAppDispatch, useAppSelector } from "./hooks"
 
-// const socket = io("http://localhost:3001")
-
-// function App() {
-//     const [userName, setUserName] = useState<string>("") // Ensure userName is always of type string
-//     const [room, setRoom] = useState<string>("") // Ensure room is always of type string
-//     const [showChat, setShowChat] = useState(false)
-
-//     // When the "Join A Room" button is pressed, the joinRoom function is called, which checks that userName and room are not empty, and if so, sends
-//     // a request to join the room using the socket.emit("join_room", room) method.
-//     const joinRoom = () => {
-//         if (userName !== "" && room !== "") {
-//             socket.emit("join_room", room)
-//             setShowChat(true)
-//         }
-//     }
-
-//     return (
-//         <div className="App">
-//             {!showChat ? (
-//                 <div className="joinChatContainer">
-//                     <h3>Join a Chat</h3>
-//                     <input
-//                         type="text"
-//                         placeholder="Name..."
-//                         onChange={(event) => setUserName(event.target.value)}
-//                     />
-//                     <input
-//                         type="text"
-//                         placeholder="Room ID..."
-//                         onChange={(event) => setRoom(event.target.value)}
-//                     />
-//                     <button onClick={joinRoom}>Join A Room</button>
-//                 </div>
-//             ) : (
-//                 <Chat socket={socket} userName={userName} room={room} />
-//             )}
-//         </div>
-//     )
-// }
-
-// export default App
-
-
-
-import React, { useState } from "react";
-import "./App.css";
-import { io } from "socket.io-client";
-import Chat from "./Chat";
-
-const socket = io("http://localhost:3001");
+const socket = io("http://localhost:3001")
 
 function App() {
-  const [userName, setUserName] = useState<string>("");
-  const [room, setRoom] = useState<string>("");
-  const [showChat, setShowChat] = useState(false);
+    const dispatch = useAppDispatch()
+    const userName = useAppSelector((state) => state.dataOfChat.userName)
+    const room = useAppSelector((state) => state.dataOfChat.room)
+    const showChat = useAppSelector((state) => state.dataOfChat.showChat)
 
-  const joinRoom = () => {
-    if (userName !== "" && room !== "") {
-      socket.emit("join_room", room);
-      setShowChat(true);
+    const joinRoom = () => {
+        if (userName !== "" && room !== "") {
+            socket.emit("join_room", room)
+            dispatch(setShowChat(true))
+        }
     }
-  };
 
-  return (
-    <div className="App">
-      {!showChat ? (
-        <div className="joinChatContainer">
-          <h3>Join a Chat</h3>
-          <input
-            type="text"
-            placeholder="Name..."
-            onChange={(event) => setUserName(event.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Room ID..."
-            onChange={(event) => setRoom(event.target.value)}
-          />
-          <button onClick={joinRoom}>Join A Room</button>
+    return (
+        <div className="App">
+            {!showChat ? (
+                <div className="joinChatContainer">
+                    <h3>Join a Chat</h3>
+                    <input
+                        type="text"
+                        placeholder="Name..."
+                        onChange={(event) =>
+                            dispatch(setUserName(event.target.value))
+                        }
+                    />
+                    <input
+                        type="text"
+                        placeholder="Room ID..."
+                        onChange={(event) =>
+                            dispatch(setRoom(event.target.value))
+                        }
+                    />
+                    <button onClick={joinRoom}>Join A Room</button>
+                </div>
+            ) : (
+                <Chat socket={socket} userName={userName} room={room} />
+            )}
         </div>
-      ) : (
-        <Chat socket={socket} userName={userName} room={room} />
-      )}
-    </div>
-  );
+    )
 }
 
-export default App;
+export default App
