@@ -61,7 +61,7 @@ function Chat({ socket, userName, room }) {
                     value={currentMessage}
                     placeholder="Input your message"
                     onChange={(event) => setCurrentMessage(event.target.value)}
-                    onKeyDown={handleKeyPress} // Заменили onKeyPress на onKeyDown
+                    onKeyDown={handleKeyPress} 
                 />
                 <button onClick={sendMessage}>&#9658;</button>
             </div>
