@@ -10,8 +10,6 @@
 
 #+end_html
 
-Kinoway is a free and open client-based online movie service that uses the Kinopoisk API.
-
 #+begin_center
 Chat is a project in which two users can correspond if they enter the same ID when entering the chat
 #+end_center
